@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
+    public Rigidbody Rigidbody => _rigidbody;
     private Rigidbody _rigidbody;
 
     private float speed = 6f;
