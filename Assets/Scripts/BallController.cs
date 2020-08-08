@@ -8,7 +8,7 @@ public class BallController : MonoBehaviour
     public Rigidbody Rigidbody => _rigidbody;
     private Rigidbody _rigidbody;
 
-    private float speed = 6f;
+    public float speed = 3f;
     private bool _isOnGround = true;
 
     // Start is called before the first frame update
@@ -25,21 +25,30 @@ public class BallController : MonoBehaviour
 
     void Controlls()
     {
-        var horizontal = Input.GetAxis("Horizontal");
-        var vertical = Input.GetAxis("Vertical");
-        var force = new Vector3(horizontal, 0, vertical);
-        if (Input.GetKeyDown(KeyCode.Space) && _isOnGround)
+        if (_isOnGround)
         {
-            _rigidbody.AddForce(new Vector3(0, 3f, 0), ForceMode.Impulse);
-            _isOnGround = false;
+            var horizontal = Input.GetAxis("Horizontal");
+            var vertical = Input.GetAxis("Vertical");
+            var force = new Vector3(horizontal, 0, vertical);
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                _rigidbody.AddForce(new Vector3(0, 3f, 0), ForceMode.Impulse);
+                _isOnGround = false;
+            }
+
+            _rigidbody.AddForce(force * speed, ForceMode.Force);
         }
 
-        _rigidbody.AddForce(force * speed, ForceMode.Force);
     }
 
     private void OnCollisionStay(Collision other)
     {
         _isOnGround = true;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        _isOnGround = false;
     }
 }
 
