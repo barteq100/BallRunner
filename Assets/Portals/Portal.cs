@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.LWRP
+using UnityEngine.Rendering.LWRP;
 
 [ExecuteInEditMode]
 public class Portal : MonoBehaviour
