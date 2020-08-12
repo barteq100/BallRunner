@@ -8,38 +8,28 @@ public class MainMenu : MonoBehaviour
 {
     public SceneAsset sceneToRun;
     public GameObject Options;
+    public GameObject ContinueButton;
+    private Save save;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        save = SaveUtils.GetLatestSave();
+        ContinueButton.SetActive(save != null);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 
     public void StartGame()
     {
-        var saveNumber = 0;
-        if(PlayerPrefs.HasKey(SaveKeys.LAST_SAVE_NAME))
-        {
-           var lastSaveName = PlayerPrefs.GetString(SaveKeys.LAST_SAVE_NAME);
-           var saveStringNumber = lastSaveName.Replace(string.Format(SaveKeys.SAVE_NAME_TEMPLATE, ""), "");
-           saveNumber = int.Parse(saveStringNumber);
-        }
-        var newSaveName = string.Format(SaveKeys.SAVE_NAME_TEMPLATE, ++saveNumber);
-        PlayerPrefs.SetString(SaveKeys.LAST_SAVE_NAME, newSaveName);
-        PlayerPrefs.Save();
-        SceneManager.LoadScene(sceneToRun.name);
+        save = SaveUtils.CreateNew(sceneToRun.name);
+        SceneManager.LoadScene(save.LevelName);
 
     }
 
     public void OpenOptions()
     {
         Options.SetActive(true);
-    } 
+    }
     public void CloseOptions()
     {
         Options.SetActive(false);
@@ -47,12 +37,12 @@ public class MainMenu : MonoBehaviour
 
     public void QuitGame()
     {
-       Application.Quit();
+        Application.Quit();
     }
 
     public void Continue()
     {
-        SceneManager.LoadScene(sceneToRun.name);
+        SceneManager.LoadScene(save.LevelName);
     }
 
 }

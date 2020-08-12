@@ -11,5 +11,6 @@ namespace Assets.Scripts.Save
         public static string SAVE_NAME_TEMPLATE = "GAME_{0}";
         public static string LAST_SAVE_NAME = "LastSaveName";
         public static string SAVE_CHECKPOINT_SUFFIX = ".Checkpoint";
+        public static string SAVE_LEVEL_SUFFIX = ".Level";
     }
 }

@@ -2,17 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class Drop : MonoBehaviour
 {
-    private Scene _activeScene;
-    private void Start()
-    {
-        _activeScene = SceneManager.GetActiveScene();
-    }
+    public UnityAction OnDrop;
     private void OnTriggerEnter(Collider other)
     {
-        SceneManager.LoadScene(_activeScene.name);
+        OnDrop?.Invoke();
     }
 }

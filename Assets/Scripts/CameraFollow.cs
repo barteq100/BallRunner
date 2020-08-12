@@ -9,14 +9,29 @@ namespace DefaultNamespace
 {
     public class CameraFollow : MonoBehaviour
     {
-        public Transform Target;
+        
+       
+
         public FollowData[] Data;
         public float CurrentSpeed;
-        private Vector3 Offset;
+        public Vector3 Offset;
         private float _maxDistance;
+
+
+        private Transform _target;
+
+        public Transform Target
+        { 
+            get => _target;
+            set {
+                _target = value;
+                transform.position = _target.position + Offset;
+                transform.LookAt(_target);
+            }
+        }
+
         private void Awake()
         {
-            Offset = transform.position - Target.position;
             _maxDistance = Data.Last().Distance;
         }
 
