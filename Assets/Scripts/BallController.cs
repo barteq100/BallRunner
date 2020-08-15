@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class BallController : MonoBehaviour
@@ -9,8 +10,10 @@ public class BallController : MonoBehaviour
     private Rigidbody _rigidbody;
 
     public float speed = 3f;
+    public float jumpForce = 5f;
     private bool _isOnGround = true;
-
+    public Vector3 cachedForce = Vector3.zero;
+    public bool cachingForce = false;
     // Start is called before the first frame update
     void Awake()
     {
@@ -21,6 +24,7 @@ public class BallController : MonoBehaviour
     void Update()
     {
         Controlls();
+        TryRemoveCachedFroce();
     }
 
     void Controlls()
@@ -32,13 +36,20 @@ public class BallController : MonoBehaviour
             var force = new Vector3(horizontal, 0, vertical);
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                _rigidbody.AddForce(new Vector3(0, 3f, 0), ForceMode.Impulse);
-                _isOnGround = false;
+                TryJump(new Vector3(horizontal, jumpForce, vertical));
             }
-
             _rigidbody.AddForce(force * speed, ForceMode.Force);
         }
 
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Track"))
+        {
+            TryJump(cachedForce);
+           
+        }
     }
 
     private void OnCollisionStay(Collision other)
@@ -49,6 +60,51 @@ public class BallController : MonoBehaviour
     private void OnCollisionExit(Collision collision)
     {
         _isOnGround = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.CompareTag("Track"))
+        {
+            cachedForce = Vector3.zero;
+            cachingForce = true;
+        }
+       
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Track"))
+        {
+            cachingForce = false;
+        }
+    }
+    private void OnTriggerStay(Collider other)
+    {
+        if (cachingForce && Input.GetKey(KeyCode.Space))
+        {
+            var horizontal = Input.GetAxis("Horizontal");
+            var vertical = Input.GetAxis("Vertical");
+            var force = new Vector3(horizontal, jumpForce, vertical);
+            cachedForce = force;
+        }
+    }
+
+
+    void TryJump(Vector3 force)
+    {
+        if (force.sqrMagnitude <= 0f) return;
+        _rigidbody.AddForce(force, ForceMode.Impulse);
+        _isOnGround = false;
+        cachedForce = Vector3.zero;
+    }
+
+    void TryRemoveCachedFroce()
+    {
+        if(!cachingForce && Input.GetKeyUp(KeyCode.Space))
+        {
+            cachedForce = Vector3.zero;
+        }
     }
 }
 

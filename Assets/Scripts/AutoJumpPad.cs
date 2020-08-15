@@ -20,7 +20,7 @@ public class AutoJumpPad : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            TriggerAnim();
+            TriggerAnim(true);
         }
     }
 
@@ -28,13 +28,13 @@ public class AutoJumpPad : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            TriggerAnim();
+            TriggerAnim(false);
         }
     }
 
-    private void TriggerAnim()
+    private void TriggerAnim(bool state)
     {
-        _isOpen = !_isOpen;
+        _isOpen = state;
         _animator.SetBool("IsOpen", _isOpen);
     }
 }
